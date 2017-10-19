@@ -1,40 +1,48 @@
 let bubbles = [];
+
 function setup() {
-  createCanvas(800, 800);
-  for (let i = 0; i < 20; i++){
-    bubbles[i] = new bubble(width / 2,height / 2 ,50);
-  }
+  createCanvas(600, 400);
+
 }
 
 function draw() {
   background(0);
 
-  for(let i = 0; i < bubbles.length; i++){
-    bubbles[i].show();
+  bubbles.push(new bubble());
+
+  for (let i = bubbles.length - 1; i > 0; i--) {
     bubbles[i].move();
-    bubbles[i].pulse();
+    bubbles[i].show();
+    if (bubbles[i].remove()) {
+      bubbles.splice(i, 1);
+    }
   }
 }
 
-
-class bubble{
-  constructor(x, y, r){
-    this.x = x;
-    this.y = y;
-    this.r = r;
+class bubble {
+  constructor() {
+    this.x = 300;
+    this.y = 380;
+    this.vx = random(-1, 1);
+    this.vy = random(-3, -1);
+    this.alpha = 255;
   }
 
-  show(){
-    stroke(255);
-    strokeWeight(4);
-    noFill();
-    ellipse(this.x, this.y, this.r);
+  remove() {
+    return this.alpha < 0;
   }
-  move(){
-    this.x += random(-5,5);
-    this.y += random(-5,5);
+
+  show() {
+    noStroke();
+    fill(255, this.alpha);
+    ellipse(this.x, this.y, 16);
   }
-  pulse(){
-    this.r += random(-1,1);
+  move() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= 5;
+  }
+  pulse() {
+    this.r += random(-1, 1);
   }
 }
